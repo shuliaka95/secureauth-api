@@ -32,7 +32,7 @@ class AuthController extends Controller
         ]);
 
         /** @var \App\Models\User $user */
-        // Создаем персональный токен (Passport добавляет метод createToken через трейт HasApiTokens)
+        // Создаем персональный токен (метод createToken доступен через трейт HasApiTokens)
         $token = $user->createToken('Personal Access Token')->accessToken;
 
         return response()->json([
@@ -42,7 +42,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Авторизует пользователя и выдает token при успешном входе.
+     * Авторизует пользователя, проверяет учетные данные и возвращает token.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
@@ -77,16 +77,14 @@ class AuthController extends Controller
     }
 
     /**
-     * Производит выход пользователя (удаляет все токены).
+     * Осуществляет выход, отзывая все токены пользователя.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function logout(Request $request)
     {
-        // Удаляем (отзываем) все токены пользователя
         $request->user()->tokens()->delete();
-
         return response()->json(['message' => 'Logged out successfully']);
     }
 }
